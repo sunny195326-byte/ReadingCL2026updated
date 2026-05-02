@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>华语绘本故事时间</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    background: #FBF7F0;
+    color: #342C22;
+    min-height: 100vh;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 9999; opacity: 0.02;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat; background-size: 256px;
+  }
+
+  .site-header {
+    background: #342C22; color: #FBF7F0;
+    padding: 1.25rem 1.5rem; text-align: center;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    display: flex; align-items: center; justify-content: center; gap: 1rem;
+  }
+  .site-header h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.3rem; font-weight: 700;
+    letter-spacing: 0.05em; cursor: pointer;
+  }
+  .site-header .subtitle { font-size: 0.78rem; opacity: 0.6; }
+  .header-right {
+    position: absolute; right: 1rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .header-user {
+    font-size: 0.75rem; opacity: 0.7;
+  }
+  .header-btn {
+    font-size: 0.72rem; padding: 0.3rem 0.7rem;
+    border: 1px solid rgba(255,255,255,0.3); border-radius: 6px;
+    background: none; color: #FBF7F0; cursor: pointer;
+    font-family: 'Noto Sans SC', sans-serif;
+    transition: all 0.2s;
+  }
+  .header-btn:hover { background: rgba(255,255,255,0.15); }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* LOGIN */
+  .login-container {
+    max-width: 400px; margin: 0 auto; padding: 3rem 1.5rem;
+    text-align: center;
+  }
+  .login-container h2 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.6rem; font-weight: 700; margin-bottom: 0.5rem;
+  }
+  .login-container .login-sub {
+    font-size: 0.88rem; color: #7A6D5E; margin-bottom: 2rem; line-height: 1.5;
+  }
+  .login-box {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(209,199,186,0.4);
+    border-radius: 14px; padding: 2rem;
+    text-align: left;
+  }
+  .login-box label {
+    display: block; font-size: 0.82rem; font-weight: 500;
+    margin-bottom: 0.3rem; color: #594D3F;
+  }
+  .login-box input {
+    width: 100%; padding: 0.65rem 0.9rem;
+    border: 1px solid rgba(209,199,186,0.5); border-radius: 8px;
+    font-size: 0.9rem; font-family: 'Noto Sans SC', sans-serif;
+    background: #fff; margin-bottom: 1rem;
+    outline: none; transition: border-color 0.2s;
+  }
+  .login-box input:focus { border-color: #C0433D; }
+  .login-btn {
+    width: 100%; padding: 0.7rem;
+    background: #342C22; color: #FBF7F0;
+    border: none; border-radius: 8px;
+    font-size: 0.9rem; font-weight: 500;
+    cursor: pointer; font-family: 'Noto Sans SC', sans-serif;
+    transition: background 0.2s;
+  }
+  .login-btn:hover { background: #4A3F33; }
+  .login-btn:disabled { opacity: 0.5; cursor: default; }
+  .login-error {
+    font-size: 0.8rem; color: #C0433D;
+    margin-top: 0.75rem; display: none;
+  }
+  .login-toggle {
+    font-size: 0.8rem; color: #7A6D5E;
+    margin-top: 1.5rem; cursor: pointer;
+  }
+  .login-toggle a { color: #C0433D; text-decoration: underline; cursor: pointer; }
+
+  /* HOME */
+  .home-container { max-width: 700px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+  .home-intro { text-align: center; margin-bottom: 2rem; }
+  .home-intro h2 { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .home-intro p { font-size: 0.9rem; color: #7A6D5E; line-height: 1.6; }
+  .grade-cards { display: flex; flex-direction: column; gap: 1rem; }
+  .grade-card {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(209,199,186,0.4);
+    border-radius: 14px; padding: 1.5rem 1.8rem;
+    cursor: pointer; transition: all 0.25s;
+    display: flex; align-items: center; gap: 1.2rem;
+  }
+  .grade-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+    border-color: rgba(192,67,61,0.3);
+  }
+  .grade-icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; flex-shrink: 0;
+  }
+  .grade-card:nth-child(1) .grade-icon { background: #FDEBD0; }
+  .grade-card:nth-child(2) .grade-icon { background: #D5F5E3; }
+  .grade-card:nth-child(3) .grade-icon { background: #D6EAF8; }
+  .grade-card:nth-child(4) .grade-icon { background: #FCE4EC; }
+  .grade-card:nth-child(5) .grade-icon { background: #E8EAF6; }
+  .grade-card:nth-child(6) .grade-icon { background: #FFF3E0; }
+  .grade-card:nth-child(7) .grade-icon { background: #E1F5FE; }
+  .grade-info h3 { font-family: 'Noto Serif SC', serif; font-size: 1.15rem; font-weight: 700; }
+  .grade-info p { font-size: 0.82rem; color: #7A6D5E; margin-top: 0.2rem; }
+  .grade-count {
+    margin-left: auto; font-size: 0.75rem; color: #A89A8A;
+    background: rgba(209,199,186,0.2); padding: 0.3rem 0.7rem;
+    border-radius: 999px; white-space: nowrap;
+  }
+
+  /* GRADE LIST */
+  .grade-container { max-width: 700px; margin: 0 auto; padding: 1.5rem; }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-size: 0.85rem; color: #7A6D5E; cursor: pointer;
+    padding: 0.5rem 0; margin-bottom: 1rem;
+    background: none; border: none;
+    font-family: 'Noto Sans SC', sans-serif; transition: color 0.2s;
+  }
+  .back-btn:hover { color: #C0433D; }
+  .grade-header {
+    font-family: 'Noto Serif SC', serif; font-size: 1.3rem; font-weight: 700;
+    margin-bottom: 1rem; padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(209,199,186,0.3);
+  }
+  .book-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .book-item {
+    display: flex; align-items: center; gap: 0.8rem;
+    padding: 0.9rem 1.2rem;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(209,199,186,0.3);
+    border-radius: 10px; cursor: pointer; transition: all 0.2s;
+    text-decoration: none; color: inherit;
+  }
+  .book-item:hover { background: rgba(192,67,61,0.05); border-color: rgba(192,67,61,0.25); }
+  .book-item .item-num {
+    font-family: 'Noto Serif SC', serif; font-weight: 900;
+    font-size: 0.85rem; color: #A89A8A;
+    width: 1.8rem; text-align: center; flex-shrink: 0;
+  }
+  .book-item .item-title { font-size: 0.95rem; font-weight: 500; flex: 1; }
+  .book-item .item-en { font-size: 0.75rem; color: #A89A8A; margin-top: 0.15rem; }
+  .book-item .item-arrow { color: #C0433D; font-size: 0.9rem; flex-shrink: 0; opacity: 0; transition: opacity 0.2s; }
+  .book-item:hover .item-arrow { opacity: 1; }
+  .book-item .read-check { color: #2E7048; font-size: 0.85rem; flex-shrink: 0; }
+
+  /* PLAYER */
+  .player-container { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+  .video-container {
+    position: relative; width: 100%; padding-bottom: 56.25%;
+    background: #1A150F; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2); margin-bottom: 1.25rem;
+  }
+  .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+  .book-info {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(209,199,186,0.4);
+    border-radius: 12px; padding: 1.5rem 2rem; margin-bottom: 1rem;
+  }
+  .book-info .book-title { font-family: 'Noto Serif SC', serif; font-size: 1.5rem; font-weight: 700; line-height: 1.3; }
+  .book-info .book-title-en { font-size: 0.95rem; color: #A89A8A; font-weight: 400; margin-left: 0.5rem; }
+  .book-info .book-author { font-size: 0.88rem; color: #7A6D5E; margin-top: 0.4rem; }
+  .book-info .book-note { font-size: 0.88rem; color: #594D3F; line-height: 1.6; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(209,199,186,0.3); }
+  .meta-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.65rem; }
+  .meta-badge { font-size: 0.72rem; font-weight: 500; padding: 0.25rem 0.7rem; border-radius: 999px; background: #F9EFE2; color: #7D4F2C; }
+  .meta-badge.channel { background: #dce8d4; color: #2E7048; }
+  .meta-badge.grade-tag { background: #D6EAF8; color: #2C5F8A; }
+  .library-reminder {
+    max-width: 900px; margin: 0 auto 1rem;
+    padding: 1rem 1.5rem; background: rgba(62,142,96,0.08);
+    border: 1px solid rgba(62,142,96,0.2); border-radius: 10px;
+    font-size: 0.85rem; color: #2E7048;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .library-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .player-nav { display: flex; justify-content: space-between; gap: 0.5rem; margin-top: 0.75rem; }
+  .nav-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.55rem 1.1rem;
+    border: 1px solid rgba(209,199,186,0.5); border-radius: 8px;
+    background: rgba(255,255,255,0.6); cursor: pointer;
+    font-size: 0.82rem; color: #594D3F; transition: all 0.2s;
+    font-family: 'Noto Sans SC', sans-serif;
+  }
+  .nav-btn:hover { background: #342C22; color: #FBF7F0; }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .nav-btn:disabled:hover { background: rgba(255,255,255,0.6); color: #594D3F; }
+
+  /* TEACHER DASHBOARD */
+  .teacher-container { max-width: 1000px; margin: 0 auto; padding: 1.5rem; }
+  .teacher-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;
+  }
+  .teacher-header h2 { font-family: 'Noto Serif SC', serif; font-size: 1.3rem; font-weight: 700; }
+  .teacher-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .teacher-tab {
+    padding: 0.5rem 1rem; border-radius: 8px;
+    border: 1px solid rgba(209,199,186,0.5);
+    background: rgba(255,255,255,0.6); cursor: pointer;
+    font-size: 0.82rem; color: #594D3F;
+    font-family: 'Noto Sans SC', sans-serif; transition: all 0.2s;
+  }
+  .teacher-tab.active { background: #342C22; color: #FBF7F0; border-color: #342C22; }
+  .teacher-tab:hover:not(.active) { background: rgba(209,199,186,0.2); }
+
+  /* Student management */
+  .add-student-row {
+    display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;
+  }
+  .add-student-row input {
+    padding: 0.55rem 0.8rem; border: 1px solid rgba(209,199,186,0.5);
+    border-radius: 8px; font-size: 0.85rem;
+    font-family: 'Noto Sans SC', sans-serif; outline: none;
+    flex: 1; min-width: 120px;
+  }
+  .add-student-row input:focus { border-color: #C0433D; }
+  .add-btn {
+    padding: 0.55rem 1.2rem; background: #2E7048; color: #fff;
+    border: none; border-radius: 8px; font-size: 0.82rem;
+    cursor: pointer; font-family: 'Noto Sans SC', sans-serif;
+    white-space: nowrap;
+  }
+  .add-btn:hover { background: #256B3B; }
+
+  .student-table {
+    width: 100%; border-collapse: collapse;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(209,199,186,0.4);
+    border-radius: 10px; overflow: hidden;
+  }
+  .student-table th, .student-table td {
+    padding: 0.7rem 1rem; text-align: left;
+    font-size: 0.85rem; border-bottom: 1px solid rgba(209,199,186,0.2);
+  }
+  .student-table th {
+    background: rgba(209,199,186,0.15);
+    font-weight: 600; color: #594D3F;
+    font-size: 0.78rem;
+  }
+  .student-table tr:last-child td { border-bottom: none; }
+  .student-table .del-btn {
+    font-size: 0.75rem; color: #C0433D; cursor: pointer;
+    background: none; border: none; padding: 0.2rem 0.5rem;
+    font-family: 'Noto Sans SC', sans-serif;
+  }
+  .student-table .del-btn:hover { text-decoration: underline; }
+
+  /* Reading records */
+  .record-card {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(209,199,186,0.4);
+    border-radius: 10px; padding: 1.2rem 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .record-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .record-books { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .record-book {
+    font-size: 0.72rem; padding: 0.2rem 0.6rem;
+    border-radius: 999px; background: #D5F5E3; color: #2E7048;
+    position: relative; overflow: hidden;
+  }
+  .record-book.unread { background: #F0EDED; color: #A89A8A; }
+  .record-book .progress-bg {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: #A9DFBF; border-radius: 999px; z-index: 0;
+    transition: width 0.3s;
+  }
+  .record-book .progress-text {
+    position: relative; z-index: 1;
+  }
+  .record-book.partial { background: #F0EDED; color: #5B7B5E; }
+  .record-time { font-size: 0.7rem; color: #A89A8A; margin-top: 0.4rem; }
+  .record-stats {
+    display: flex; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;
+  }
+  .stat-card {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(209,199,186,0.4);
+    border-radius: 10px; padding: 1rem 1.5rem; flex: 1; min-width: 140px;
+    text-align: center;
+  }
+  .stat-num { font-family: 'Noto Serif SC', serif; font-size: 2rem; font-weight: 900; color: #C0433D; }
+  .stat-label { font-size: 0.78rem; color: #7A6D5E; margin-top: 0.2rem; }
+
+  .no-firebase-msg {
+    max-width: 600px; margin: 3rem auto; padding: 2rem;
+    background: rgba(192,67,61,0.08); border: 1px solid rgba(192,67,61,0.2);
+    border-radius: 12px; text-align: center;
+  }
+  .no-firebase-msg h3 { font-family: 'Noto Serif SC', serif; font-size: 1.1rem; margin-bottom: 0.5rem; color: #C0433D; }
+  .no-firebase-msg p { font-size: 0.85rem; color: #594D3F; line-height: 1.6; }
+  .no-firebase-msg code {
+    display: block; background: #342C22; color: #FBF7F0;
+    padding: 1rem; border-radius: 8px; margin-top: 1rem;
+    font-size: 0.75rem; text-align: left; white-space: pre; overflow-x: auto;
+  }
+
+  @media (max-width: 600px) {
+    .home-container { padding: 1.5rem 1rem; }
+    .grade-card { padding: 1rem 1.2rem; }
+    .grade-icon { width: 44px; height: 44px; font-size: 1.3rem; }
+    .player-container { padding: 1rem; }
+    .book-info { padding: 1rem 1.2rem; }
+    .book-info .book-title { font-size: 1.2rem; }
+    .book-info .book-title-en { display: block; margin-left: 0; margin-top: 0.15rem; }
+    .header-right { position: static; }
+    .site-header { flex-wrap: wrap; }
+    .teacher-container { padding: 1rem; }
+    .add-student-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header" id="site-header" style="display:none">
+  <div style="text-align:center">
+    <h1 onclick="showHome()">华语绘本故事时间</h1>
+    <div class="subtitle">看完视频，去图书馆找到这本书吧！</div>
+  </div>
+  <div class="header-right">
+    <span class="header-user" id="header-user"></span>
+    <button class="header-btn" id="header-teacher-btn" style="display:none" onclick="showTeacher()">老师后台</button>
+    <button class="header-btn" onclick="logout()">退出</button>
+  </div>
+</header>
+
+<!-- LOGIN VIEW -->
+<div class="view active" id="view-login">
+  <div class="login-container">
+    <h2>华语绘本故事时间</h2>
+    <p class="login-sub">看完视频，去图书馆找到这本书吧！</p>
+    <div class="login-box">
+      <div id="login-student-form">
+        <label>姓名</label>
+        <input type="text" id="login-name" placeholder="输入你的姓名" autocomplete="off">
+        <label>密码</label>
+        <input type="password" id="login-pass" placeholder="输入密码">
+        <button class="login-btn" onclick="doLogin()">登录</button>
+        <div class="login-error" id="login-error">姓名或密码错误</div>
+      </div>
+      <div class="login-toggle">
+        <a onclick="toggleTeacherLogin()">老师登录</a>
+      </div>
+      <div id="login-teacher-form" style="display:none">
+        <label>老师密码</label>
+        <input type="password" id="teacher-pass" placeholder="输入老师密码">
+        <button class="login-btn" onclick="doTeacherLogin()">老师登录</button>
+        <div class="login-error" id="teacher-error">密码错误</div>
+        <div class="login-toggle" style="margin-top:1rem">
+          <a onclick="toggleTeacherLogin()">学生登录</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOME VIEW -->
+<div class="view" id="view-home">
+  <div class="home-container">
+    <div class="home-intro">
+      <h2>选择年级</h2>
+      <p>点击年级查看适合的绘本故事</p>
+    </div>
+    <div class="grade-cards">
+      <div class="grade-card" onclick="showGrade(1)">
+        <div class="grade-icon">🌱</div>
+        <div class="grade-info"><h3>一年级</h3><p>简单有趣，培养阅读兴趣</p></div>
+        <span class="grade-count" id="count-1"></span>
+      </div>
+      <div class="grade-card" onclick="showGrade(2)">
+        <div class="grade-icon">🌿</div>
+        <div class="grade-info"><h3>二年级</h3><p>故事丰富，拓展想象力</p></div>
+        <span class="grade-count" id="count-2"></span>
+      </div>
+      <div class="grade-card" onclick="showGrade(3)">
+        <div class="grade-icon">🌳</div>
+        <div class="grade-info"><h3>三年级</h3><p>内容深入，引发思考</p></div>
+        <span class="grade-count" id="count-3"></span>
+      </div>
+      <div class="grade-card" onclick="showGrade(4)">
+        <div class="grade-icon">📖</div>
+        <div class="grade-info"><h3>四年级</h3><p>经典童话，开启文学之旅</p></div>
+        <span class="grade-count" id="count-4"></span>
+      </div>
+      <div class="grade-card" onclick="showGrade(5)">
+        <div class="grade-icon">📚</div>
+        <div class="grade-info"><h3>五年级</h3><p>名著阅读，拓展视野</p></div>
+        <span class="grade-count" id="count-5"></span>
+      </div>
+      <div class="grade-card" onclick="showGrade(6)">
+        <div class="grade-icon">🎓</div>
+        <div class="grade-info"><h3>六年级</h3><p>经典文学，深度阅读</p></div>
+        <span class="grade-count" id="count-6"></span>
+      </div>
+      <div class="grade-card" onclick="showGrade(7)">
+        <div class="grade-icon">🎬</div>
+        <div class="grade-info"><h3>华语动画</h3><p>经典华语动画，寓教于乐</p></div>
+        <span class="grade-count" id="count-7"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GRADE VIEW -->
+<div class="view" id="view-grade">
+  <div class="grade-container">
+    <button class="back-btn" onclick="showHome()">&#9664; 返回选择年级</button>
+    <div class="grade-header" id="grade-title"></div>
+    <div class="book-list" id="book-list"></div>
+  </div>
+</div>
+
+<!-- PLAYER VIEW -->
+<div class="view" id="view-player">
+  <div class="player-container">
+    <button class="back-btn" id="back-to-grade">&#9664; 返回书单</button>
+    <div class="video-container">
+      <iframe id="video-player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>
+    </div>
+    <div class="book-info" id="book-info"></div>
+    <div class="library-reminder">
+      <span class="library-icon">📚</span>
+      <span>看完这个故事了吗？去图书馆找到这本书，翻开它，你会发现更多视频里没有的精彩细节！</span>
+    </div>
+    <div class="player-nav">
+      <button class="nav-btn" id="prev-btn" onclick="goBook(-1)">&#9664; 上一本</button>
+      <button class="nav-btn" id="next-btn" onclick="goBook(1)">下一本 &#9654;</button>
+    </div>
+  </div>
+</div>
+
+<!-- TEACHER VIEW -->
+<div class="view" id="view-teacher">
+  <div class="teacher-container">
+    <button class="back-btn" onclick="showHome()">&#9664; 返回首页</button>
+    <div class="teacher-header">
+      <h2>老师后台</h2>
+    </div>
+    <div class="teacher-tabs">
+      <button class="teacher-tab active" onclick="showTeacherTab('records')">阅读记录</button>
+      <button class="teacher-tab" onclick="showTeacherTab('students')">管理学生</button>
+    </div>
+
+    <!-- Class filter (shared) -->
+    <div id="class-filter" style="margin-bottom:1rem;">
+      <div class="teacher-tabs" style="margin-bottom:0.4rem;flex-wrap:wrap;">
+        <button class="teacher-tab active" onclick="filterClass('all', this)">全部</button>
+      </div>
+      <div style="font-size:0.72rem;color:#7A6D5E;margin-bottom:0.3rem;">一年级</div>
+      <div class="teacher-tabs" style="margin-bottom:0.4rem;flex-wrap:wrap;">
+        <button class="teacher-tab" onclick="filterClass('1CL1', this)">1CL1</button>
+        <button class="teacher-tab" onclick="filterClass('1CL2', this)">1CL2</button>
+        <button class="teacher-tab" onclick="filterClass('1CL3', this)">1CL3</button>
+        <button class="teacher-tab" onclick="filterClass('1CL4', this)">1CL4</button>
+      </div>
+      <div style="font-size:0.72rem;color:#7A6D5E;margin-bottom:0.3rem;">二年级</div>
+      <div class="teacher-tabs" style="margin-bottom:0.4rem;flex-wrap:wrap;">
+        <button class="teacher-tab" onclick="filterClass('2CL1', this)">2CL1</button>
+        <button class="teacher-tab" onclick="filterClass('2CL2', this)">2CL2</button>
+        <button class="teacher-tab" onclick="filterClass('2CL3', this)">2CL3</button>
+        <button class="teacher-tab" onclick="filterClass('2CL4', this)">2CL4</button>
+      </div>
+      <div style="font-size:0.72rem;color:#7A6D5E;margin-bottom:0.3rem;">三年级</div>
+      <div class="teacher-tabs" style="margin-bottom:0.4rem;flex-wrap:wrap;">
+        <button class="teacher-tab" onclick="filterClass('3CL1', this)">3CL1</button>
+        <button class="teacher-tab" onclick="filterClass('3CL2', this)">3CL2</button>
+        <button class="teacher-tab" onclick="filterClass('3CL3', this)">3CL3</button>
+        <button class="teacher-tab" onclick="filterClass('3CL4', this)">3CL4</button>
+        <button class="teacher-tab" onclick="filterClass('3CL5', this)">3CL5</button>
+      </div>
+      <div style="font-size:0.72rem;color:#7A6D5E;margin-bottom:0.3rem;">四年级</div>
+      <div class="teacher-tabs" style="margin-bottom:0.4rem;flex-wrap:wrap;">
+        <button class="teacher-tab" onclick="filterClass('4CL1', this)">4CL1</button>
+        <button class="teacher-tab" onclick="filterClass('4CL2', this)">4CL2</button>
+        <button class="teacher-tab" onclick="filterClass('4CL3', this)">4CL3</button>
+        <button class="teacher-tab" onclick="filterClass('4CL4', this)">4CL4</button>
+        <button class="teacher-tab" onclick="filterClass('4CL5', this)">4CL5</button>
+      </div>
+      <div style="font-size:0.72rem;color:#7A6D5E;margin-bottom:0.3rem;">五年级</div>
+      <div class="teacher-tabs" style="margin-bottom:0.4rem;flex-wrap:wrap;">
+        <button class="teacher-tab" onclick="filterClass('5CL1', this)">5CL1</button>
+        <button class="teacher-tab" onclick="filterClass('5CL2', this)">5CL2</button>
+        <button class="teacher-tab" onclick="filterClass('5CL3', this)">5CL3</button>
+        <button class="teacher-tab" onclick="filterClass('5CL4', this)">5CL4</button>
+        <button class="teacher-tab" onclick="filterClass('5CL5', this)">5CL5</button>
+      </div>
+      <div style="font-size:0.72rem;color:#7A6D5E;margin-bottom:0.3rem;">六年级</div>
+      <div class="teacher-tabs" style="margin-bottom:0.4rem;flex-wrap:wrap;">
+        <button class="teacher-tab" onclick="filterClass('6CL1', this)">6CL1</button>
+        <button class="teacher-tab" onclick="filterClass('6CL2', this)">6CL2</button>
+        <button class="teacher-tab" onclick="filterClass('6CL3', this)">6CL3</button>
+        <button class="teacher-tab" onclick="filterClass('6CL4', this)">6CL4</button>
+      </div>
+    </div>
+
+    <!-- Records tab -->
+    <div id="tab-records">
+      <div class="record-stats" id="record-stats"></div>
+      <div id="records-list"></div>
+    </div>
+
+    <!-- Students tab -->
+    <div id="tab-students" style="display:none">
+      <div class="add-student-row">
+        <input type="text" id="new-student-name" placeholder="学生姓名">
+        <input type="text" id="new-student-pass" placeholder="密码">
+        <input type="text" id="new-student-class" placeholder="班级（选填）">
+        <select id="new-student-grade" style="padding:0.55rem 0.8rem;border:1px solid rgba(209,199,186,0.5);border-radius:8px;font-size:0.85rem;font-family:'Noto Sans SC',sans-serif;min-width:100px;">
+          <option value="">年级（选填）</option>
+          <option value="1">一年级</option>
+          <option value="2">二年级</option>
+          <option value="3">三年级</option>
+          <option value="4">四年级</option>
+          <option value="5">五年级</option>
+          <option value="6">六年级</option>
+        </select>
+        <button class="add-btn" onclick="addStudent()">添加学生</button>
+        <button class="add-btn" onclick="document.getElementById('excel-upload').click()" style="background:#2E86C1;margin-left:0.5rem;">📂 导入Excel名单</button>
+        <input type="file" id="excel-upload" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleExcelUpload(event)">
+      </div>
+      <p style="font-size:0.72rem;color:#999;margin-top:0.3rem;">Excel格式：第一列=学生姓名，第二列=密码，第三列=班级，第四列=年级(1-6)</p>
+      <table class="student-table" id="student-table">
+        <thead><tr><th>姓名</th><th>密码</th><th>班级</th><th>年级</th><th>已读</th><th></th></tr></thead>
+        <tbody id="student-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+<script>
+// YouTube IFrame API (kept as fallback, no longer primary player)
+var ytPlayer = null;
+var ytReady = false;
+</script>
+<script>
+/*==============================================================
+  FIREBASE CONFIG — Replace with your own Firebase project config
+  ==============================================================*/
+const firebaseConfig = {
+  apiKey: "AIzaSyBByFtnNE3xgM4abM8j--YBMSDd3VTBxB4",
+  authDomain: "chinesestory.firebaseapp.com",
+  projectId: "chinesestory",
+  storageBucket: "chinesestory.firebasestorage.app",
+  messagingSenderId: "710813388356",
+  appId: "1:710813388356:web:683a8589016528346db611"
+};
+
+// Teacher password — change this to your own secret password
+const TEACHER_PASSWORD = "teacher2026";
+
+/*==============================================================
+  Book data
+  ==============================================================*/
+const books = [
+  // ===== 一年级 (Grade 1) - 10 books =====
+  { n:1, title:"好饿的毛毛虫", en:"The Very Hungry Caterpillar", author:"[美] 艾瑞·卡尔 (Eric Carle)", channel:"Clipwise", age:"3–6岁", vid:"https://www.youtube-nocookie.com/embed/WKLZCeA1v3k", note:"全球经典绘本的中文朗读版，色彩缤纷的拼贴画风格，教孩子认识食物、数字和蝴蝶的蜕变。", nlb:"https://catalogue.nlb.gov.sg/search/card?recordId=203882173", grade:1 },
+  { n:2, title:"猜猜我有多爱你", en:"Guess How Much I Love You", author:"[爱尔兰] 山姆·麦克布雷尼 文 / 安妮塔·婕朗 图", channel:"Clipwise", age:"3–6岁", vid:"WTMW9xRTxKc", note:"大兔子和小兔子之间温馨的爱的比赛，是亲子共读的永恒经典。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E7%8C%9C%E7%8C%9C%E6%88%91%E6%9C%89%E5%A4%9A%E7%88%B1%E4%BD%A0+%E5%B1%B1%E5%A7%86", grade:1 },
+  { n:3, title:"逃家小兔", en:"The Runaway Bunny", author:"[美] 玛格丽特·怀兹·布朗 文 / 克雷门·赫德 图", channel:"Clipwise", age:"3–6岁", vid:"2rLJq9uUMYA", note:"小兔子想要离家出走，妈妈总是变成各种形象追随他——无条件的母爱故事。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E9%80%83%E5%AE%B6%E5%B0%8F%E5%85%94+%E7%8E%9B%E6%A0%BC%E4%B8%BD%E7%89%B9", grade:1 },
+  { n:4, title:"自己的颜色", en:"A Color of His Own", author:"[美] 李欧·李奥尼 (Leo Lionni)", channel:"Clipwise", age:"3–6岁", vid:"https://www.youtube-nocookie.com/embed/j8Al8qhA7D0", note:"变色龙寻找属于自己的颜色，关于自我认同与友谊的经典绘本。", grade:1 },
+  { n:5, title:"我爸爸", en:"My Dad", author:"[英] 安东尼·布朗 (Anthony Browne)", channel:"Clipwise", age:"3–6岁", vid:"https://www.youtube-nocookie.com/embed/LG7VvsYkW4k?start=51", note:"用孩子的视角描绘爸爸的伟大形象，幽默温馨，是父亲节的最佳朗读选择。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E6%88%91%E7%88%B8%E7%88%B8+%E5%AE%89%E4%B8%9C%E5%B0%BC%E5%B8%83%E6%9C%97", grade:1 },
+  { n:6, title:"小蓝和小黄", en:"Little Blue and Little Yellow", author:"[美] 李欧·李奥尼 (Leo Lionni)", channel:"Clipwise", age:"3–6岁", vid:"https://www.youtube-nocookie.com/embed/on_rSGOjnZM", note:"小蓝和小黄拥抱变成了绿色，关于友情与色彩的经典绘本。", nlb:"https://catalogue.nlb.gov.sg/search/card?recordId=12989645", grade:1 },
+  { n:7, title:"鳄鱼怕怕，牙医怕怕", en:"Crocodile and Dentist", author:"[日] 五味太郎", channel:"Clipwise", age:"3–6岁", vid:"BdOM7Nf6aZM", note:"鳄鱼和牙医互相害怕对方，重复句式巧妙有趣，帮助孩子克服看牙恐惧。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E9%B3%84%E9%B1%BC%E6%80%95%E6%80%95%E7%89%99%E5%8C%BB%E6%80%95%E6%80%95+%E4%BA%94%E5%91%B3%E5%A4%AA%E9%83%8E", grade:1 },
+  { n:8, title:"棕色的熊、棕色的熊，你在看什么？", en:"Brown Bear, Brown Bear, What Do You See?", author:"[美] 比尔·马丁/文，艾瑞·卡尔/图", channel:"Clipwise", age:"3–6岁", vid:"mhNSxeZ2mZg", note:"经典颜色认知绘本，通过重复句式认识动物和颜色。", nlb:"https://catalogue.nlb.gov.sg/search/card?id=917c3564-d508-51c4-9324-722579ee29e1&entityType=FormatGroup", grade:1 },
+  { n:9, title:"好饿的小蛇", en:"A Hungry Little Snake", author:"[日] 宫西达也", channel:"Clipwise", age:"3–6岁", vid:"C8JG9-8eBS8", note:"贪吃小蛇吞下各种水果，形状认知趣味绘本。", nlb:"https://catalogue.nlb.gov.sg/search/card?id=edfdcbfe-d0c8-55d2-a976-bc8da0e1ace0&entityType=FormatGroup", grade:1 },
+  { n:10, title:"菲菲生气了", en:"When Sophie Gets Angry", author:"[美] 莫莉·卞 (Molly Bang)", channel:"Clipwise", age:"3–6岁", vid:"YnCiNAAUjEk", note:"帮助孩子认识和管理愤怒情绪的经典绘本。", nlb:"https://catalogue.nlb.gov.sg/search/card?id=7df99732-77d0-529f-9c90-2714deadbad8&entityType=FormatGroup", grade:1 },
+  // ===== 二年级 (Grade 2) - 10 books =====
+  { n:11, title:"彩虹鱼", en:"The Rainbow Fish", author:"[瑞士] 马克斯·菲斯特 (Marcus Pfister)", channel:"中文有声绘本", age:"3–6岁", vid:"https://www.youtube-nocookie.com/embed/THPg7gs8Dbo", note:"一条闪闪发光的鱼学会了分享的快乐，书中的亮片印刷让孩子着迷。", grade:2 },
+  { n:12, title:"鸭子骑车记", en:"Duck on a Bike", author:"[美] 大卫·夏农 (David Shannon)", channel:"中文有声故事绘本书", age:"3–6岁", vid:"https://www.youtube-nocookie.com/embed/oKCIpyIdRmc", note:"鸭子突发奇想骑上自行车，农场里的动物们各有各的看法——一个关于勇气和冒险的欢乐故事。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E9%B8%AD%E5%AD%90%E9%AA%91%E8%BD%A6%E8%AE%B0", grade:2 },
+  { n:13, title:"花婆婆", en:"Miss Rumphius", author:"[美] 芭芭拉·库尼 (Barbara Cooney)", channel:"有声绘本频道", age:"5–8岁", vid:"https://www.youtube-nocookie.com/embed/SiYpwv-0UPE", note:"美国国家图书奖作品，讲述让世界变得更美丽的使命。", grade:2 },
+  { n:14, title:"爱心树", en:"The Giving Tree", author:"[美] 谢尔·希尔弗斯坦 (Shel Silverstein)", channel:"有声绘本频道", age:"5–8岁", vid:"https://www.youtube-nocookie.com/embed/fYZ3mJX6w48", note:"一棵大树无私地奉献自己给小男孩——关于爱与给予的深刻寓言。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E7%88%B1%E5%BF%83%E6%A0%91", grade:2 },
+  { n:15, title:"是谁嗯嗯在我的头上", en:"The Story of the Little Mole", author:"[德] 维尔纳·霍尔茨瓦特/文，沃尔夫·埃布鲁赫/图", channel:"儿童绘本故事", age:"3–8岁", vid:"https://www.youtube-nocookie.com/embed/rVJ4tdwB_Vw?start=38", note:"小鼹鼠寻找谁在他头上便便的趣味科普故事。", nlb:"https://catalogue.nlb.gov.sg/search/card?recordId=12942137", grade:2 },
+  { n:16, title:"要是你给老鼠吃饼干", en:"If You Give a Mouse a Cookie", author:"[美] 劳拉·乔菲·努梅罗夫/文，费利西亚·邦德/图", channel:"华文幼儿故事", age:"3–8岁", vid:"https://www.youtube-nocookie.com/embed/9kGAJ3-34Hw", note:"因果循环的趣味故事，给老鼠饼干会发生什么？", nlb:"https://catalogue.nlb.gov.sg/search/card?id=20eb8ff0-eab6-5047-b397-d383dd73e5c6&entityType=FormatGroup", grade:2 },
+  { n:17, title:"我把妈妈变成了鳄鱼", en:"I Turned My Mom into a Crocodile", author:"华语原创绘本", channel:"华文幼儿故事", age:"3–8岁", vid:"https://www.youtube-nocookie.com/embed/wfTu-cIYVgc", note:"孩子的想象力让妈妈变成了鳄鱼，一个充满童趣和亲情的有趣故事。", nlb:"https://catalogue.nlb.gov.sg/search/card?recordId=201095210", grade:2 },
+  { n:18, title:"小蝌蚪找妈妈", en:"Little Tadpoles Looking for Mama", author:"中国经典故事", channel:"华文幼儿故事", age:"3–8岁", vid:"https://www.youtube-nocookie.com/embed/MVYFSjxh4C4", note:"小蝌蚪在池塘里寻找妈妈的旅程，经典中国儿童故事。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E5%B0%8F%E8%9D%8C%E8%9A%AA%E6%89%BE%E5%A6%88%E5%A6%88", grade:2 },
+  { n:19, title:"彩虹色的花", en:"The Rainbow Colored Flower", author:"[美] 麦克·格雷涅茨", channel:"中文有声绘本", age:"3–8岁", vid:"https://www.youtube-nocookie.com/embed/8S2AZ3HPMaE", note:"一朵彩虹色的花把花瓣送给需要帮助的小动物们，关于分享与奉献的温暖故事。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E5%BD%A9%E8%99%B9%E8%89%B2%E7%9A%84%E8%8A%B1", grade:2 },
+  { n:20, title:"瓢虫马戏团", en:"The Ladybug Circus", author:"华语原创绘本", channel:"中文有声绘本", age:"3–8岁", vid:"https://www.youtube-nocookie.com/embed/lNpgYtbV6Uo", note:"小瓢虫们组成马戏团的有趣故事，充满想象力和欢乐。", grade:2 },
+  // ===== 三年级 (Grade 3) - 10 books =====
+  { n:21, title:"蚯蚓的日记", en:"Diary of a Worm", author:"[美] 朵琳·克罗宁 文 / 哈利·布里斯 图", channel:"爱哆有声绘本故事IDOL", age:"5–8岁", vid:"https://www.youtube-nocookie.com/embed/zC9yz49BYdQ", note:"以日记形式记录小蚯蚓的趣事，幽默的视角让孩子认识自然世界。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E8%9A%AF%E8%9A%93%E7%9A%84%E6%97%A5%E8%AE%B0", grade:3 },
+  { n:22, title:"活了100万次的猫", en:"The Cat That Lived a Million Times", author:"[日] 佐野洋子", channel:"爱哆有声绘本故事IDOL", age:"5–8岁", vid:"https://www.youtube-nocookie.com/embed/Zp2kXDALWwc", note:"日本绘本大奖作品，探讨生命与爱的哲学故事。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E6%B4%BB%E4%BA%86100%E4%B8%87%E6%AC%A1%E7%9A%84%E7%8C%AB", grade:3 },
+  { n:23, title:"爷爷一定有办法", en:"Something from Nothing", author:"[加] 菲比·乔尔森 文 / 改编自犹太民间故事", channel:"有声绘本频道", age:"5–8岁", vid:"https://www.youtube-nocookie.com/embed/gcqTp_9Dmmo", note:"爷爷把一条旧毯子不断改造成新物品，展现智慧与爱的传承。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E7%88%B7%E7%88%B7%E4%B8%80%E5%AE%9A%E6%9C%89%E5%8A%9E%E6%B3%95", grade:3 },
+  { n:24, title:"阿诗有块大花布", en:"A Shi's Big Floral Cloth", author:"华语原创绘本", channel:"亲子阅读ReadForKid", age:"5–8岁", vid:"https://www.youtube-nocookie.com/embed/Cg1--8qW1Mc", note:"奶奶织的大花布承载着家族温情，入选\"中国原创绘本200\"榜单。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E9%98%BF%E8%AF%97%E6%9C%89%E5%9D%97%E5%A4%A7%E8%8A%B1%E5%B8%83", grade:3 },
+  { n:25, title:"吃书的孩子", en:"The Incredible Book Eating Boy", author:"[爱尔兰] 奥利弗·杰弗斯 (Oliver Jeffers)", channel:"绘本趣读 Story Time with Jing", age:"5–8岁", vid:"https://www.youtube-nocookie.com/embed/93odeO4Bj2M", note:"小男孩发现吃书比读书更快，但最终领悟到阅读的真正乐趣！", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E5%90%83%E4%B9%A6%E7%9A%84%E5%AD%A9%E5%AD%90", grade:3 },
+  { n:26, title:"我想有个弟弟", en:"Les P'tites Poules", author:"[法] 克利斯提昂·约里波瓦/文，艾利施/图", channel:"有声绘本故事", age:"5–8岁", vid:"https://www.youtube-nocookie.com/embed/38A-Ik77QHw", note:"小鸡卡梅拉系列故事，充满冒险与梦想。", grade:3 },
+  { n:27, title:"谁说一定要用蓝色画天空", en:"Who Says You Have to Paint the Sky Blue", author:"华语原创绘本", channel:"兒童有聲繪本故事", age:"5–8岁", vid:"https://www.youtube-nocookie.com/embed/R9s8HJd4im4", note:"鼓励孩子打破常规，用创意和想象力看世界。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E8%B0%81%E8%AF%B4%E4%B8%80%E5%AE%9A%E8%A6%81%E7%94%A8%E8%93%9D%E8%89%B2%E7%94%BB%E5%A4%A9%E7%A9%BA", grade:3 },
+  { n:28, title:"田鼠阿佛", en:"Frederick", author:"[美] 李欧·李奥尼 (Leo Lionni)", channel:"非讀BOOK", age:"5–8岁", vid:"https://www.youtube-nocookie.com/embed/D69lGcNyYoA", note:"当其他田鼠收集粮食时，阿佛收集阳光、颜色和词语。", nlb:"https://catalogue.nlb.gov.sg/search/card?id=6e9c6b17-f40c-538e-a681-9e77d049ac35&entityType=FormatGroup", grade:3 },
+  { n:29, title:"我有友情要出租", en:"Friendship for Rent", author:"[台湾] 方素珍/文，郝洛玟/图", channel:"听故事时间STORY TIME", age:"5–8岁", vid:"https://www.youtube-nocookie.com/embed/_IrDHEgPaJQ", note:"大猩猩出租友情却发现真正的友谊无法用钱买到。", nlb:"https://catalogue.nlb.gov.sg/search/card?id=ea7402c2-d2e4-5f1b-8053-960b9d69f134&entityType=FormatGroup", grade:3 },
+  { n:30, title:"别让太阳掉下来", en:"Don't Let the Sun Fall Down", author:"华语原创绘本", channel:"有声绘本故事", age:"5–8岁", vid:"https://www.youtube-nocookie.com/embed/qDS3NyLvXD4", note:"一群小动物齐心协力不让太阳掉下来的有趣故事。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E5%88%AB%E8%AE%A9%E5%A4%AA%E9%98%B3%E6%8E%89%E4%B8%8B%E6%9D%A5", grade:3 },
+  // ===== 四年级 (Grade 4) - 10 books =====
+  { n:31, title:"咕噜牛", en:"The Gruffalo", author:"[英] 朱莉娅·唐纳森 文 / 阿克塞尔·舍夫勒 图", channel:"Clipwise", age:"9–10岁", vid:"https://www.youtube-nocookie.com/embed/ZX1vj6eTQIo", note:"小老鼠智斗森林里的动物，想象出可怕的咕噜牛。", grade:4 },
+  { n:32, title:"开车去兜风", en:"Let's Go for a Drive", author:"[日] 间�的直方", channel:"有声绘本故事", age:"9–10岁", vid:"https://www.youtube-nocookie.com/embed/phw42FNlcFk", note:"一家人开车出发，享受兜风的快乐旅程。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E5%BC%80%E8%BD%A6%E5%8E%BB%E5%85%9C%E9%A3%8E", grade:4 },
+  { n:33, title:"公主怎么挖鼻屎", en:"The Princess and the Booger", author:"李卓颖", channel:"Clipwise", age:"9–10岁", vid:"a2BNN6Mb88A", note:"搞笑幽默的绘本，教孩子良好的卫生习惯。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E5%85%AC%E4%B8%BB%E6%80%8E%E4%B9%88%E6%8C%96%E9%BC%BB%E5%B1%8E", grade:4 },
+  { n:34, title:"正义之士", en:"The Hero", author:"宫西达也", channel:"Clipwise", age:"9–10岁", vid:"https://www.youtube-nocookie.com/embed/w5z6_7Hu4kE", note:"关于正义与勇气的温暖故事。", grade:4 },
+  { n:35, title:"中秋节快乐", en:"Happy Mid-Autumn Festival", author:"华语绘本", channel:"有声绘本故事", age:"9–10岁", vid:"https://www.youtube-nocookie.com/embed/xFZYLiotQ4s", note:"中秋佳节的温馨绘本故事。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E4%B8%AD%E7%A7%8B%E8%8A%82%E5%BF%AB%E4%B9%90", grade:4 },
+  { n:36, title:"我的大喊大叫的一天", en:"My Shouting Day", author:"[英] 丽贝卡·乔布 文/图", channel:"有声绘本故事", age:"9–10岁", vid:"https://www.youtube-nocookie.com/embed/7f-QBmVQI4U", note:"小女孩大喊大叫的一天，学会管理情绪。", nlb:"https://catalogue.nlb.gov.sg/search/card?recordId=202524687", grade:4 },
+  { n:37, title:"你看起来好像很好吃", en:"You Look Yummy", author:"[日] 宫西达也", channel:"有声绘本故事", age:"9–10岁", vid:"https://www.youtube-nocookie.com/embed/nphZZK8xE4I", note:"霸王龙与小甲龙之间温暖的亲情故事。", nlb:"https://catalogue.nlb.gov.sg/search/card?recordId=12424423", grade:4 },
+  { n:38, title:"大大公主", en:"Big Big Princess", author:"华语原创绘本", channel:"有声绘本故事", age:"9–10岁", vid:"https://www.youtube-nocookie.com/embed/r4m8OqK4aqQ", note:"大大公主的有趣冒险故事。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E5%A4%A7%E5%A4%A7%E5%85%AC%E4%B8%BB", grade:4 },
+  { n:39, title:"神奇糖果店", en:"The Magic Candy Store", author:"[日] 宫西达也", channel:"Clipwise", age:"9–10岁", vid:"GATHn0Mj0wA", note:"大灰狼在神奇糖果店买到变身糖果的趣味故事。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E7%A5%9E%E5%A5%87%E7%B3%96%E6%9E%9C%E5%BA%97+%E5%AE%AB%E8%A5%BF%E8%BE%BE%E4%B9%9F", grade:4 },
+  { n:40, title:"吃掉黑暗的怪兽", en:"The Monster Who Ate Darkness", author:"[英] 乔伊斯·邓巴 文 / 安娜·戈尔巴赫 图", channel:"Clipwise", age:"9–10岁", vid:"pUKiBbzcxDI", note:"小怪兽把黑暗都吃掉了，世界会变成什么样？", grade:4 },
+  // ===== 五年级 (Grade 5) - 10 books =====
+  { n:51, title:"朱家故事", en:"Piggybook", author:"[英] 安东尼·布朗", channel:"有声绘本故事", age:"10–11岁", vid:"https://www.youtube-nocookie.com/embed/tQ412kwjG-Y?start=243", note:"朱家的故事，探讨家庭分工与尊重。", nlb:"https://catalogue.nlb.gov.sg/search/card?recordId=13223233", grade:5 },
+  { n:52, title:"三个和尚", en:"Three Monks", author:"中国经典寓言", channel:"有声绘本故事", age:"10–11岁", vid:"https://www.youtube-nocookie.com/embed/PLCqUnaxn5Q", note:"一个和尚挑水喝，三个和尚没水喝的经典寓言。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E4%B8%89%E4%B8%AA%E5%92%8C%E5%B0%9A", grade:5 },
+  { n:53, title:"团圆", en:"Reunion", author:"余丽琼 文 / 朱成梁 图", channel:"有声绘本故事", age:"10–11岁", vid:"https://www.youtube-nocookie.com/embed/LBfd2J03z00", note:"春节团圆的温馨故事，感受家的温暖。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E5%9B%A2%E5%9C%86+%E4%BD%99%E4%B8%BD%E7%90%BC", grade:5 },
+  { n:54, title:"嗨，哈尔滨", en:"Hi Harbin", author:"华语原创绘本", channel:"有声绘本故事", age:"10–11岁", vid:"https://www.youtube-nocookie.com/embed/U-tt9FsHCTM", note:"探索哈尔滨的城市绘本故事。", nlb:"https://nlb.overdrive.com/media/988C3A8F-4399-409F-8DF6-83D75475D5EF", grade:5 },
+  { n:55, title:"牙齿大街新鲜事", en:"News from Tooth Street", author:"[德] 鲁斯曼·安娜", channel:"有声绘本故事", age:"10–11岁", vid:"https://www.youtube-nocookie.com/embed/ctey0texaJE", note:"牙齿里的小细菌搞破坏，学习保护牙齿。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E7%89%99%E9%BD%BF%E5%A4%A7%E8%A1%97%E6%96%B0%E9%B2%9C%E4%BA%8B", grade:5 },
+  { n:56, title:"伊伊，春节快乐", en:"Happy Chinese New Year, Yiyi", author:"华语原创绘本", channel:"有声绘本故事", age:"10–11岁", vid:"https://www.youtube-nocookie.com/embed/3jYwdJNOHPo", note:"伊伊和家人一起欢度春节的故事。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E4%BC%8A%E4%BC%8A%E6%98%A5%E8%8A%82%E5%BF%AB%E4%B9%90", grade:5 },
+  { n:57, title:"灶王爷", en:"The Kitchen God", author:"熊亮", channel:"有声绘本故事", age:"10–11岁", vid:"https://www.youtube-nocookie.com/embed/LS7ZIwlBBXI", note:"中国传统文化绘本，灶王爷的故事。", grade:5 },
+  { n:58, title:"肚子里有个火车站", en:"A Train Station in My Tummy", author:"[德] 鲁斯曼·安娜", channel:"有声绘本故事", age:"10–11岁", vid:"https://www.youtube-nocookie.com/embed/TPx0EkwANC0", note:"肚子里的小精灵帮助消化食物的趣味科普。", grade:5 },
+  { n:59, title:"石头汤", en:"Stone Soup", author:"[美] 琼·穆特", channel:"有声绘本故事", age:"10–11岁", vid:"https://www.youtube-nocookie.com/embed/_vPF7Gaw9R8", note:"三个和尚用石头煮汤，教会村民分享的故事。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E7%9F%B3%E5%A4%B4%E6%B1%A4", grade:5 },
+  { n:60, title:"武松打虎", en:"Wu Song Fights the Tiger", author:"中国古典名著改编", channel:"有声绘本故事", age:"10–11岁", vid:"https://www.youtube-nocookie.com/embed/wmC0D1GFsno", note:"水浒传经典故事，武松景阳冈打虎。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E6%AD%A6%E6%9D%BE%E6%89%93%E8%99%8E", grade:5 },
+  // ===== 六年级 (Grade 6) - 10 books =====
+  { n:71, title:"驴小弟变石头", en:"Sylvester and the Magic Pebble", author:"[美] 威廉·史塔克", channel:"有声绘本故事", age:"11–12岁", vid:"https://www.youtube-nocookie.com/embed/HQrPd8RRK58?start=141", note:"驴小弟捡到魔法石却变成了石头的奇幻故事。", grade:6 },
+  { n:72, title:"让路给小鸭子", en:"Make Way for Ducklings", author:"[美] 罗伯特·麦克洛斯基", channel:"有声绘本故事", age:"11–12岁", vid:"https://www.youtube-nocookie.com/embed/rBnex04QSPo", note:"鸭妈妈带着小鸭子穿越城市的温馨故事。", nlb:"https://catalogue.nlb.gov.sg/search/card?recordId=13734189", grade:6 },
+  { n:73, title:"魔奇魔奇树", en:"The Magic Tree", author:"[日] �的井俊介 文 / 的场�的之 图", channel:"有声绘本故事", age:"11–12岁", vid:"https://www.youtube-nocookie.com/embed/3-xpgQ7jHOA?start=278", note:"胆小男孩为了爷爷勇敢奔跑的感人故事。", nlb:"https://catalogue.nlb.gov.sg/search/card?recordId=201681871", grade:6 },
+  { n:74, title:"爷爷变成了幽灵", en:"Grandpa Becomes a Ghost", author:"[丹麦] 金·弗珀兹·艾克松", channel:"有声绘本故事", age:"11–12岁", vid:"https://www.youtube-nocookie.com/embed/188CfSIPpz8?start=384", note:"爷爷去世后变成幽灵回来告别的温情故事。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E7%88%B7%E7%88%B7%E5%8F%98%E6%88%90%E4%BA%86%E5%B9%BD%E7%81%B5", grade:6 },
+  { n:75, title:"小艾的端午节", en:"Xiao Ai's Dragon Boat Festival", author:"华语原创绘本", channel:"有声绘本故事", age:"11–12岁", vid:"https://www.youtube-nocookie.com/embed/UmotGRZEhjg?start=184", note:"小艾和家人一起过端午节的传统文化故事。", grade:6 },
+  { n:76, title:"十二生肖的故事", en:"The Story of the Chinese Zodiac", author:"华语原创绘本", channel:"有声绘本故事", age:"11–12岁", vid:"https://www.youtube-nocookie.com/embed/HuMWPgvroEY?start=14", note:"十二生肖排名的由来，经典民间传说。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E5%8D%81%E4%BA%8C%E7%94%9F%E8%82%96%E7%9A%84%E6%95%85%E4%BA%8B", grade:6 },
+  { n:77, title:"怎么才能不吃掉我的朋友", en:"How Not to Eat My Friend", author:"华语原创绘本", channel:"有声绘本故事", age:"11–12岁", vid:"https://www.youtube-nocookie.com/embed/KxdQjSvrc-E?start=59", note:"一个关于友谊与自制力的趣味故事。", grade:6 },
+  { n:78, title:"图书馆狮子", en:"Library Lion", author:"[美] 米歇尔·努森 文 / 凯文·霍克斯 图", channel:"有声绘本故事", age:"11–12岁", vid:"https://www.youtube-nocookie.com/embed/FmeycNY4Ye0?start=293", note:"一只狮子走进图书馆，学会遵守规则的温馨故事。", grade:6 },
+  { n:79, title:"女巫温妮", en:"Winnie the Witch", author:"[澳] 瓦莱丽·托马斯 文 / 科奇·保罗 图", channel:"有声绘本故事", age:"11–12岁", vid:"https://www.youtube-nocookie.com/embed/1cWowMih4fs", note:"女巫温妮和她的黑猫威尔伯的趣味冒险。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E5%A5%B3%E5%B7%AB%E6%B8%A9%E5%A6%AE", grade:6 },
+  { n:80, title:"妈妈的红沙发", en:"A Chair for My Mother", author:"[美] 威拉·威廉斯", channel:"有声绘本故事", age:"11–12岁", vid:"https://www.youtube-nocookie.com/embed/cV4XwcUtvPI?start=283", note:"一家人存钱买红沙发的温暖亲情故事。", nlb:"https://search.nlb.gov.sg/onesearch/Search?cont=book&query=%E5%A6%88%E5%A6%88%E7%9A%84%E7%BA%A2%E6%B2%99%E5%8F%91", grade:6 },
+  // ===== 华语动画 (Grade 7) - 2 items =====
+  { n:91, title:"西游记", en:"Journey to the West", author:"吴承恩（改编）", channel:"Clipwise", age:"全年龄", vid:"https://www.youtube-nocookie.com/embed/vhsG3GQSPCs", note:"孙悟空师徒四人西天取经的经典神话故事。", grade:7 },
+  { n:92, title:"米小圈动画汉字", en:"Mi Xiaoquan Animated Characters", author:"北猫", channel:"Clipwise", age:"全年龄", vid:"https://www.youtube-nocookie.com/embed/sFe8prtMLao", note:"趣味动画学汉字，让识字变得生动有趣。", grade:7 },
+  { n:93, title:"大头儿子，小头爸爸", en:"Big Head Son, Small Head Dad", author:"郑春华", channel:"YouTube动画频道", age:"全年龄", vid:"https://www.youtube-nocookie.com/embed/videoseries?list=PLsw2iU9xmpfZ8UivWNS0mH98OSFsgWBAo", note:"经典华语动画，大头儿子和小头爸爸的温馨日常。", grade:7 },
+  { n:94, title:"倒霉先生", en:"Mr. Unlucky", author:"华语动画", channel:"YouTube动画频道", age:"全年龄", vid:"https://www.youtube-nocookie.com/embed/videoseries?list=PL3tooT_GdB5F3ZaVtUWz61UgrU5KGQrmT", note:"倒霉先生的搞笑日常，寓教于乐的趣味动画。", grade:7 },
+];
+
+const gradeNames = { 1: "一年级", 2: "二年级", 3: "三年级", 4: "四年级", 5: "五年级", 6: "六年级", 7: "华语动画" };
+let currentGrade = null;
+let currentGradeBooks = [];
+let currentBookIdx = 0;
+let currentUser = null; // { name, id, isTeacher }
+let db = null;
+let firebaseReady = false;
+
+/*==============================================================
+  Firebase init
+  ==============================================================*/
+function initFirebase() {
+  if (firebaseConfig.apiKey === "YOUR_API_KEY") {
+    firebaseReady = false;
+    return;
+  }
+  try {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    firebaseReady = true;
+  } catch (e) {
+    console.error("Firebase init error:", e);
+    firebaseReady = false;
+  }
+}
+initFirebase();
+
+// Set grade counts
+[1,2,3,4,5,6,7].forEach(g => {
+  document.getElementById('count-' + g).textContent = books.filter(b => b.grade === g).length + ' 本';
+});
+
+/*==============================================================
+  View switching
+  ==============================================================*/
+function switchView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+/*==============================================================
+  Login
+  ==============================================================*/
+function toggleTeacherLogin() {
+  const sf = document.getElementById('login-student-form');
+  const tf = document.getElementById('login-teacher-form');
+  if (sf.style.display === 'none') {
+    sf.style.display = ''; tf.style.display = 'none';
+  } else {
+    sf.style.display = 'none'; tf.style.display = '';
+  }
+}
+
+async function doLogin() {
+  const name = document.getElementById('login-name').value.trim();
+  const pass = document.getElementById('login-pass').value.trim();
+  const err = document.getElementById('login-error');
+  err.style.display = 'none';
+
+  if (!name || !pass) { err.textContent = '请输入姓名和密码'; err.style.display = 'block'; return; }
+
+  if (!firebaseReady) {
+    err.textContent = 'Firebase 尚未配置，请联系老师'; err.style.display = 'block'; return;
+  }
+
+  try {
+    const snap = await db.collection('students').where('name', '==', name).where('password', '==', pass).get();
+    if (snap.empty) {
+      err.textContent = '姓名或密码错误'; err.style.display = 'block'; return;
+    }
+    const doc = snap.docs[0];
+    currentUser = { name: doc.data().name, id: doc.id, isTeacher: false, className: doc.data().className || '' };
+    sessionStorage.setItem('user', JSON.stringify(currentUser));
+    enterApp();
+  } catch (e) {
+    err.textContent = '连接失败，请重试'; err.style.display = 'block';
+    console.error(e);
+  }
+}
+
+function doTeacherLogin() {
+  const pass = document.getElementById('teacher-pass').value.trim();
+  const err = document.getElementById('teacher-error');
+  err.style.display = 'none';
+
+  if (pass !== TEACHER_PASSWORD) {
+    err.textContent = '密码错误'; err.style.display = 'block'; return;
+  }
+  currentUser = { name: '老师', id: 'teacher', isTeacher: true };
+  sessionStorage.setItem('user', JSON.stringify(currentUser));
+  enterApp();
+}
+
+function enterApp() {
+  document.getElementById('site-header').style.display = '';
+  document.getElementById('header-user').textContent = currentUser.name;
+  if (currentUser.isTeacher) {
+    document.getElementById('header-teacher-btn').style.display = '';
+  }
+  showHome();
+}
+
+function logout() {
+  stopWatchTracking();
+  const vp = document.getElementById('video-player');
+  if (vp) vp.src = '';
+  currentUser = null;
+  sessionStorage.removeItem('user');
+  document.getElementById('site-header').style.display = 'none';
+  document.getElementById('header-teacher-btn').style.display = 'none';
+  document.getElementById('login-name').value = '';
+  document.getElementById('login-pass').value = '';
+  document.getElementById('teacher-pass').value = '';
+  switchView('login');
+}
+
+// Auto-login from session
+(function checkSession() {
+  const saved = sessionStorage.getItem('user');
+  if (saved) {
+    try {
+      currentUser = JSON.parse(saved);
+      enterApp();
+    } catch(e) {}
+  }
+})();
+
+// Enter key on login inputs
+document.getElementById('login-pass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('login-name').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('teacher-pass').addEventListener('keydown', e => { if(e.key==='Enter') doTeacherLogin(); });
+
+/*==============================================================
+  Home / Grade / Player
+  ==============================================================*/
+function showHome() {
+  stopWatchTracking();
+  const vp = document.getElementById('video-player');
+  if (vp) vp.src = '';
+  switchView('home');
+}
+
+function showGrade(g) {
+  currentGrade = g;
+  currentGradeBooks = books.filter(b => b.grade === g);
+  document.getElementById('grade-title').textContent = gradeNames[g] + ' — 绘本故事 (' + currentGradeBooks.length + '本)';
+  renderBookList();
+  switchView('grade');
+}
+
+async function renderBookList() {
+  // Get user's read books
+  let readSet = new Set();
+  if (firebaseReady && currentUser && !currentUser.isTeacher) {
+    try {
+      const snap = await db.collection('records').where('userId', '==', currentUser.id).get();
+      snap.forEach(doc => readSet.add(doc.data().bookId));
+    } catch(e) {}
+  }
+
+  const list = document.getElementById('book-list');
+  list.innerHTML = currentGradeBooks.map((b, i) => {
+    const isRead = readSet.has(b.n);
+    return `<a class="book-item" onclick="showPlayer(${i})">
+      <span class="item-num">${String(i + 1).padStart(2, '0')}</span>
+      <div style="flex:1">
+        <div class="item-title">${b.title}</div>
+        <div class="item-en">${b.en}</div>
+      </div>
+      ${isRead ? '<span class="read-check">&#10003; 已看</span>' : ''}
+      <span class="item-arrow">&#9654;</span>
+    </a>`;
+  }).join('');
+}
+
+// ---- Watch progress tracking ----
+let watchTimer = null;
+let watchStartTime = 0;
+let currentWatchSeconds = 0;
+let currentBookForTracking = null;
+
+function stopWatchTracking() {
+  if (watchTimer) { clearInterval(watchTimer); watchTimer = null; }
+  if (currentBookForTracking && currentWatchSeconds > 0) {
+    try { saveProgress(currentBookForTracking, currentWatchSeconds); } catch(e) {}
+  }
+  currentBookForTracking = null;
+  currentWatchSeconds = 0;
+  ytPlayer = null;
+}
+
+function ensurePlayerIframe() {
+  const wrapper = document.querySelector('.video-container');
+  if (!wrapper) return null;
+  // Remove any non-iframe elements (like YT player divs or placeholders)
+  const oldPh = document.getElementById('external-placeholder');
+  if (oldPh) oldPh.remove();
+  let el = document.getElementById('video-player');
+  if (el && el.tagName === 'DIV') {
+    el.remove();
+    el = null;
+  }
+  if (!el) {
+    el = document.createElement('iframe');
+    el.id = 'video-player';
+    wrapper.appendChild(el);
+  }
+  el.removeAttribute('src');
+  el.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+  el.setAttribute('allowfullscreen', 'true');
+  el.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border:none;';
+  return el;
+}
+
+function startWatchTracking(book) {
+  stopWatchTracking();
+  currentBookForTracking = book;
+  watchStartTime = Date.now();
+  currentWatchSeconds = 0;
+
+  watchTimer = setInterval(() => {
+    let progress = 0;
+    // For YouTube: use API to get real progress
+    if (ytPlayer && typeof ytPlayer.getCurrentTime === 'function' && typeof ytPlayer.getDuration === 'function') {
+      const dur = ytPlayer.getDuration();
+      const cur = ytPlayer.getCurrentTime();
+      if (dur > 0) progress = Math.round((cur / dur) * 100);
+      currentWatchSeconds = Math.round(cur);
+    } else {
+      // For non-YouTube: use elapsed time
+      currentWatchSeconds = Math.round((Date.now() - watchStartTime) / 1000);
+    }
+    // Auto-save every 15 seconds
+    if (currentWatchSeconds > 0 && currentWatchSeconds % 15 < 5) {
+      saveProgress(currentBookForTracking, currentWatchSeconds, progress);
+    }
+  }, 5000);
+}
+
+async function saveProgress(book, seconds, ytProgress) {
+  if (!firebaseReady || !currentUser || currentUser.isTeacher) return;
+  try {
+    const docId = currentUser.id + '_' + book.n;
+    const existing = await db.collection('records').doc(docId).get();
+    const oldData = existing.exists ? existing.data() : {};
+    const oldSeconds = oldData.watchTime || 0;
+    const oldProgress = oldData.watchProgress || 0;
+
+    const newSeconds = Math.max(oldSeconds, seconds);
+    let newProgress = ytProgress || 0;
+    // If no YT progress, estimate from time (assume ~10min avg video)
+    if (!newProgress && seconds > 0) {
+      const estDuration = book.duration || 600;
+      newProgress = Math.min(100, Math.round((seconds / estDuration) * 100));
+    }
+    newProgress = Math.max(oldProgress, newProgress);
+
+    await db.collection('records').doc(docId).set({
+      userId: currentUser.id,
+      userName: currentUser.name,
+      userClass: currentUser.className || '',
+      bookId: book.n,
+      bookTitle: book.title,
+      grade: book.grade,
+      timestamp: oldData.timestamp || firebase.firestore.FieldValue.serverTimestamp(),
+      lastViewed: new Date().toISOString(),
+      watchTime: newSeconds,
+      watchProgress: newProgress
+    }, { merge: true });
+  } catch(e) {
+    console.error("Save progress error:", e);
+  }
+}
+
+// Piped instance for ad-free video playback (change this if the instance goes down)
+const PIPED_HOST = 'https://piped.video';
+
+function showPlayer(idx) {
+  stopWatchTracking();
+  currentBookIdx = idx;
+  const b = currentGradeBooks[idx];
+
+  // Build embed URL
+  let embedUrl = '';
+  if (b.vid.startsWith('http')) {
+    embedUrl = b.vid;
+  } else {
+    embedUrl = 'https://www.youtube-nocookie.com/embed/' + b.vid;
+  }
+
+  // Switch to player view first, then set iframe src
+  switchView('player');
+
+  const el = ensurePlayerIframe();
+  if (el) el.src = embedUrl;
+  startWatchTracking(b);
+
+  document.getElementById('book-info').innerHTML = `
+    <div class="book-title">${b.title}<span class="book-title-en">${b.en}</span></div>
+    <div class="book-author">${b.author}</div>
+    <div class="meta-badges">
+      <span class="meta-badge">${b.age}</span>
+      <span class="meta-badge grade-tag">${gradeNames[b.grade]}</span>
+      <span class="meta-badge channel">${b.channel}</span>
+    </div>
+    <div class="book-note">${b.note}</div>
+    ${b.nlb || b.slib ? `<div class="nlb-qr" style="margin-top:1rem;padding:1rem;background:#fff;border-radius:10px;border:1px solid #e8ddd0;text-align:center;">
+      <p style="font-size:0.85rem;color:#6b5a48;margin-bottom:0.5rem;">📚 扫描二维码，看看哪里可以借到这本书</p>
+      <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;">
+      ${b.nlb ? `<div>
+        <a href="${b.nlb}" target="_blank"><img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=${encodeURIComponent(b.nlb)}" alt="NLB QR" style="width:130px;height:130px;border-radius:6px;"></a>
+        <p style="font-size:0.72rem;color:#999;margin-top:0.3rem;">National Library</p>
+      </div>` : ''}
+      ${b.slib ? `<div>
+        <a href="${b.slib}" target="_blank"><img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=${encodeURIComponent(b.slib)}" alt="School Library QR" style="width:130px;height:130px;border-radius:6px;"></a>
+        <p style="font-size:0.72rem;color:#999;margin-top:0.3rem;">School Library</p>
+      </div>` : ''}
+      </div>
+    </div>` : ''}
+  `;
+
+  document.getElementById('prev-btn').disabled = idx === 0;
+  document.getElementById('next-btn').disabled = idx === currentGradeBooks.length - 1;
+  document.getElementById('back-to-grade').onclick = () => {
+    stopWatchTracking();
+    const vp = document.getElementById('video-player');
+    if (vp) vp.src = '';
+    showGrade(currentGrade);
+  };
+}
+
+async function recordRead(book) {
+  // Now handled by saveProgress
+}
+
+function goBook(dir) {
+  const next = currentBookIdx + dir;
+  if (next >= 0 && next < currentGradeBooks.length) showPlayer(next);
+}
+
+/*==============================================================
+  Teacher dashboard
+  ==============================================================*/
+function showTeacher() {
+  if (!currentUser || !currentUser.isTeacher) return;
+  currentFilterClass = 'all';
+  loadRecords();
+  loadStudents();
+  switchView('teacher');
+}
+
+let currentFilterClass = 'all';
+let currentTeacherTab = 'records';
+
+// Map class prefix to grade number
+function classToGrade(cls) {
+  if (!cls) return 0;
+  const m = cls.match(/^(\d)/);
+  return m ? parseInt(m[1]) : 0;
+}
+
+function filterClass(cls, btn) {
+  currentFilterClass = cls;
+  document.querySelectorAll('#class-filter .teacher-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  if (currentTeacherTab === 'records') loadRecords();
+  else loadStudents();
+}
+
+function showTeacherTab(tab) {
+  currentTeacherTab = tab;
+  document.querySelectorAll('.teacher-tabs')[0].querySelectorAll('.teacher-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-records').style.display = tab === 'records' ? '' : 'none';
+  document.getElementById('tab-students').style.display = tab === 'students' ? '' : 'none';
+  if (tab === 'records') loadRecords();
+  if (tab === 'students') loadStudents();
+}
+
+async function loadRecords() {
+  if (!firebaseReady) return;
+  const statsEl = document.getElementById('record-stats');
+  const listEl = document.getElementById('records-list');
+
+  try {
+    const [studentsSnap, recordsSnap] = await Promise.all([
+      db.collection('students').get(),
+      db.collection('records').get()
+    ]);
+
+    const students = {};
+    studentsSnap.forEach(doc => {
+      students[doc.id] = { name: doc.data().name, className: doc.data().className || '', books: {} };
+    });
+
+    let totalReads = 0;
+    recordsSnap.forEach(doc => {
+      const d = doc.data();
+      if (students[d.userId]) {
+        students[d.userId].books[d.bookId] = {
+          progress: d.watchProgress || 0,
+          watchTime: d.watchTime || 0,
+          title: d.bookTitle
+        };
+        totalReads++;
+      }
+    });
+
+    const studentList = Object.values(students);
+
+    // Filter students by selected class
+    const filteredStudents = currentFilterClass === 'all'
+      ? studentList
+      : studentList.filter(s => s.className === currentFilterClass);
+
+    // Determine grade from class filter to show relevant books
+    const filterGrade = currentFilterClass === 'all' ? 0 : classToGrade(currentFilterClass);
+    const gradeBooks = filterGrade === 0 ? books : books.filter(b => b.grade === filterGrade);
+    const label = currentFilterClass === 'all' ? '全部' : currentFilterClass;
+
+    // Count reads for filtered students and grade books
+    let classReads = 0;
+    filteredStudents.forEach(s => {
+      gradeBooks.forEach(b => { if (s.books[b.n]) classReads++; });
+    });
+
+    statsEl.innerHTML = `
+      <div class="stat-card"><div class="stat-num">${filteredStudents.length}</div><div class="stat-label">${label} 学生数</div></div>
+      <div class="stat-card"><div class="stat-num">${gradeBooks.length}</div><div class="stat-label">书目数</div></div>
+      <div class="stat-card"><div class="stat-num">${classReads}</div><div class="stat-label">观看次数</div></div>
+    `;
+
+    // Sort by name
+    filteredStudents.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+    listEl.innerHTML = filteredStudents.map(s => {
+      const gradeBookCount = gradeBooks.filter(b => s.books[b.n]).length;
+
+      const bookTags = gradeBooks.map(b => {
+        const rec = s.books[b.n];
+        if (!rec) {
+          return `<span class="record-book unread"><span class="progress-text">${b.title}</span></span>`;
+        }
+        const pct = Math.min(100, rec.progress || 0);
+        if (pct >= 90) {
+          // Fully watched - solid green
+          return `<span class="record-book"><span class="progress-text">${b.title} ✓</span></span>`;
+        } else {
+          // Partially watched - show progress bar
+          return `<span class="record-book partial">
+            <span class="progress-bg" style="width:${pct}%"></span>
+            <span class="progress-text">${b.title} ${pct}%</span>
+          </span>`;
+        }
+      }).join('');
+
+      return `<div class="record-card">
+        <h4>${s.name} ${s.className ? '(' + s.className + ')' : ''} — 已看 ${gradeBookCount}/${gradeBooks.length} 本</h4>
+        <div class="record-books">${bookTags}</div>
+      </div>`;
+    }).join('');
+
+  } catch(e) {
+    listEl.innerHTML = '<p style="color:#C0433D">加载失败，请重试</p>';
+    console.error(e);
+  }
+}
+
+async function loadStudents() {
+  if (!firebaseReady) return;
+  const tbody = document.getElementById('student-tbody');
+  try {
+    const snap = await db.collection('students').get();
+    const recSnap = await db.collection('records').get();
+    const readCounts = {};
+    recSnap.forEach(doc => {
+      const uid = doc.data().userId;
+      readCounts[uid] = (readCounts[uid] || 0) + 1;
+    });
+
+    // Sort by class first, then by name within class
+    let students = [];
+    snap.forEach(doc => students.push({ id: doc.id, ...doc.data() }));
+
+    // Filter by selected class
+    if (currentFilterClass !== 'all') {
+      students = students.filter(s => s.className === currentFilterClass);
+    }
+
+    students.sort((a, b) => {
+      const ga = (a.grade || 0) - (b.grade || 0);
+      if (ga !== 0) return ga;
+      const ca = (a.className || '').localeCompare(b.className || '');
+      if (ca !== 0) return ca;
+      return (a.name || '').localeCompare(b.name || '');
+    });
+
+    tbody.innerHTML = '';
+    let lastGrade = null;
+    students.forEach(d => {
+      const gLabel = d.grade ? gradeNames[d.grade] : '';
+      if (currentFilterClass === 'all' && gLabel && gLabel !== lastGrade) {
+        const sep = document.createElement('tr');
+        sep.innerHTML = '<td colspan="6" style="background:#d6eaf8;font-weight:700;padding:0.5rem 0.8rem;font-size:0.85rem;">' + gLabel + '</td>';
+        tbody.appendChild(sep);
+        lastGrade = gLabel;
+      }
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${d.name}</td>
+        <td style="font-family:monospace;font-size:0.8rem">${d.password}</td>
+        <td>${d.className || '-'}</td>
+        <td>${gLabel || '-'}</td>
+        <td>${readCounts[d.id] || 0} 本</td>
+        <td><button class="del-btn" onclick="deleteStudent('${d.id}','${d.name}')">删除</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+async function addStudent() {
+  if (!firebaseReady) return;
+  const nameEl = document.getElementById('new-student-name');
+  const passEl = document.getElementById('new-student-pass');
+  const classEl = document.getElementById('new-student-class');
+  const gradeEl = document.getElementById('new-student-grade');
+  const name = nameEl.value.trim();
+  const pass = passEl.value.trim();
+  const cls = classEl.value.trim();
+  const grade = gradeEl.value ? parseInt(gradeEl.value) : 0;
+
+  if (!name || !pass) { alert('请输入姓名和密码'); return; }
+
+  try {
+    await db.collection('students').add({
+      name: name,
+      password: pass,
+      className: cls,
+      grade: grade,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    nameEl.value = ''; passEl.value = ''; classEl.value = ''; gradeEl.value = '';
+    loadStudents();
+  } catch(e) {
+    alert('添加失败，请重试');
+    console.error(e);
+  }
+}
+
+async function deleteStudent(id, name) {
+  if (!confirm('确定删除学生 "' + name + '" 吗？')) return;
+  try {
+    await db.collection('students').doc(id).delete();
+    loadStudents();
+  } catch(e) { alert('删除失败'); }
+}
+
+async function handleExcelUpload(event) {
+  if (!firebaseReady) { alert('Firebase 尚未配置'); return; }
+  const file = event.target.files[0];
+  if (!file) return;
+
+  try {
+    const data = await file.arrayBuffer();
+    const wb = XLSX.read(data);
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+    // Skip header row if first cell matches known headers
+    let startRow = 0;
+    const firstCell = String(rows[0]?.[0] || '').trim();
+    if (['学生姓名','姓名','name','用户名','username'].includes(firstCell.toLowerCase()) || firstCell === '学生姓名') {
+      startRow = 1;
+    }
+
+    const studentList = [];
+    for (let i = startRow; i < rows.length; i++) {
+      const r = rows[i];
+      if (!r || !r[0]) continue;
+      const name = String(r[0]).trim();
+      const pass = String(r[1] || r[0]).trim();
+      const cls = String(r[2] || '').trim();
+      const grade = parseInt(r[3]) || 0;
+      if (name) studentList.push([name, pass, cls, grade]);
+    }
+
+    if (studentList.length === 0) {
+      alert('Excel 中没有找到学生数据。\n请确保格式为：第一列=姓名，第二列=密码，第三列=班级');
+      event.target.value = '';
+      return;
+    }
+
+    // Show preview
+    const classGroups = {};
+    studentList.forEach(([n,p,c,g]) => {
+      const key = c || '未分班';
+      if (!classGroups[key]) classGroups[key] = 0;
+      classGroups[key]++;
+    });
+    const preview = Object.entries(classGroups).map(([k,v]) => k + ': ' + v + '人').join('\n');
+
+    if (!confirm('从文件 "' + file.name + '" 中读取到 ' + studentList.length + ' 名学生：\n\n' + preview + '\n\n确定导入吗？已存在的学生不会重复添加。')) {
+      event.target.value = '';
+      return;
+    }
+
+    // Import to Firebase
+    const existing = await db.collection('students').get();
+    const existingNames = new Set(existing.docs.map(d => d.data().name));
+
+    let added = 0, skipped = 0;
+    for (let i = 0; i < studentList.length; i += 20) {
+      const chunk = studentList.slice(i, i + 20);
+      const batch = db.batch();
+      for (const [name, pass, cls, grade] of chunk) {
+        if (existingNames.has(name)) { skipped++; continue; }
+        const ref = db.collection('students').doc();
+        batch.set(ref, { name, password: pass, className: cls, grade: grade || 0, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        added++;
+      }
+      await batch.commit();
+    }
+
+    alert('导入完成！\n新增: ' + added + ' 名学生\n跳过（已存在）: ' + skipped + ' 名');
+    loadStudents();
+  } catch(e) {
+    alert('导入失败：' + e.message);
+    console.error(e);
+  } finally {
+    event.target.value = '';
+  }
+}
+
+/*==============================================================
+  Keyboard navigation
+  ==============================================================*/
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('view-player').classList.contains('active')) {
+    if (e.key === 'ArrowLeft') goBook(-1);
+    if (e.key === 'ArrowRight') goBook(1);
+  }
+  if (e.key === 'Escape') {
+    if (document.getElementById('view-player').classList.contains('active')) {
+      stopWatchTracking();
+      const vp = document.getElementById('video-player');
+      if (vp) vp.src = '';
+      showGrade(currentGrade);
+    } else if (document.getElementById('view-grade').classList.contains('active')) {
+      showHome();
+    } else if (document.getElementById('view-teacher').classList.contains('active')) {
+      showHome();
+    }
+  }
+});
+
+// Save progress when closing browser/tab
+window.addEventListener('beforeunload', () => { stopWatchTracking(); });
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"75124c326cb447fe934cde04713ae013","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"75124c326cb447fe934cde04713ae013","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"75124c326cb447fe934cde04713ae013","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
